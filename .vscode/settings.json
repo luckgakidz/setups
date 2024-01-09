@@ -1,0 +1,6 @@
+{
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "errorLens.onSaveTimeout": 1000,
+  "explorer.compactFolders": false,
+}

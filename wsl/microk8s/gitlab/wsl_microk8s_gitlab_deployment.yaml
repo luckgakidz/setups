@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab
+  labels:
+    app: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      hostname: gitlab
+      containers:
+        - image:  gitlab/gitlab-ce:latest
+          name: gitlab
+          volumeMounts:
+            - name: gitlab-config-host-volume
+              mountPath: /etc/gitlab
+            - name: gitlab-host-volume
+              mountPath: /var/opt/gitlab
+          env:
+          - name: GITLAB_HOST
+            value: gitlab
+      volumes:
+        - name: gitlab-host-volume
+          hostPath:
+            path: /gitlab/data
+            type: DirectoryOrCreate
+        - name: gitlab-config-host-volume
+          hostPath:
+            path: /gitlab/config
+            type: DirectoryOrCreate

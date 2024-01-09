@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+spec:
+  selector:
+    matchLabels:
+      app: fastapi
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi
+        image: python:latest
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: fastapi-volume
+          mountPath: /fastapi
+        workingDir: /fastapi
+        command: ["/bin/bash", "/fastapi/scripts/run.sh"]
+      initContainers:
+      - name: init-fastapi
+        image: bitnami/git:latest
+        volumeMounts:
+        - name: fastapi-volume
+          mountPath: /fastapi
+        command: ["/bin/bash", "-c"]
+        args: ["git clone https://github.com/luckgakidz/template-fastapi.git /fastapi"]
+      volumes:
+      - name: fastapi-volume
+        emptyDir: {}
